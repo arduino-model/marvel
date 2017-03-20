@@ -38,17 +38,17 @@ int delaytime;
 int DEFAULTTIME;
 
 
-static const int RS = 49; 
-static const int RW =48;  
-static const int EN = 46;  
-static const int D0  = 47;  
-static const int D1  = 44; 
-static const int D2  = 45;  
-static const int D3  = 42;  
-static const int D4  = 43; 
-static const int D5  = 39;  
-static const int D6  = 41;  
-static const int D7  = 37; 
+static const int RS = 53;
+static const int RW = 51;
+static const int EN = 49;
+static const int D0 = 47;
+static const int D1 = 45;
+static const int D2 = 43;
+static const int D3 = 41;
+static const int D4 = 39;
+static const int D5 = 37;
+static const int D6 = 35;
+static const int D7 = 33;
 
 
 int temp[8];

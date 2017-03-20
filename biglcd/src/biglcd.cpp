@@ -1,27 +1,42 @@
 #include "../lib/LCD12864R/LCD12864R.h"
-#define AR_SIZE(a) sizeof(a)/ sizeof(a[0])
+#include "Arduino.h"
+
+#define LED 13
+
+char buffer[16];
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void setup() 
 {
+    pinMode(LED, OUTPUT);
+    Serial.begin(9600);
     LCDA.Initialise(); //Pantalla
-    LCDA.CLEAR();  //Pantalla
-    delay(1000);
+    LCDA.CLEAR();
+    delay(100);
+    LCDA.DisplaySig(0,0,0x20);
+    delay(100);
 }
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void loop() 
 {
-//    LCDA.CLEAR();
-//    delay(100);
-//    LCDA.DisplaySig(0,0,0x20);
-//    delay(100);
-    LCDA.DisplayString(0,0,"Hello everyone!",AR_SIZE("Hello everyone!"));;//LOGO
-    LCDA.DisplayString(1,0, "How do you do?", 14); //imprimimos en pantalla...
-    LCDA.DisplayString(2,0, "How is it going?", 16); //imprimimos en pantalla......
-    LCDA.DisplayString(3,0, "Is everything ok", 16); //imprimimos en pantalla...
+
+
+    digitalWrite(LED,HIGH);
+    printstring(0,"Hello everyone!");
+    printstring(1,"How do you do?");
+    printstring(2,"How is it going?");
+
+    if (Serial.available() > 0) {
+        Serial.readBytes(buffer, sizeof(buffer));
+        printstring(3,buffer);
+        Serial.println("I received: ");
+    }
+
 }
 
-
+void printstring(int X,char *str){
+    LCDA.DisplayString(X,0,str, strlen(str));
+}
 
 
 

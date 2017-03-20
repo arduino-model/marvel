@@ -6,7 +6,7 @@ www.DFRobot.com
 
 #include "LCD12864R.h"
 //#include "LCDSprite.h" 
-#include "arduino.h" 
+#include "Arduino.h"
 
 extern "C" 
 { 
