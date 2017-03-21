@@ -1,8 +1,5 @@
+
 #include <Arduino.h>
-
-const unsigned long t = 8;
-
-//this pins have pulse-duration modulation PDM
 const int VT1=9;
 const int VT2=10;
 const int VT3=3;
@@ -10,51 +7,82 @@ const int VT4=11;
 const int VT5=5;
 const int VT6=6;
 
-void setup() {
-    pinMode(VT1,OUTPUT);
-    pinMode(VT2,OUTPUT);
-    pinMode(VT3,OUTPUT);
-    pinMode(VT4,OUTPUT);
-    pinMode(VT5,OUTPUT);
-    pinMode(VT6,OUTPUT);
+const int ary[6][3] = {
+  {VT6,VT1,VT5}, //first step
+  {VT1,VT3,VT5}, //second step
+  {VT5,VT3,VT4}, //third step
+  {VT3,VT2,VT4}, //fourth step
+  {VT4,VT2,VT6}, //fiveth step
+  {VT2,VT1,VT6}  //sixth step
+};
+volatile unsigned int t;
+const unsigned int ranges[5][2] = {
+  {999999,16384},
+  {16383,5000},
+  {4999,2200},
+  {2199,1154},
+  {1153,0},
+};
+
+
+void setup() 
+{
+  Serial.begin(9600);
+  int VTs[6] = {VT1,VT2,VT3,VT4,VT5,VT6};
+  for (int i = 0; i < 6; ++i) {
+    pinMode(VTs[i],OUTPUT);
+  }  
 }
 
-void loop() {
+void loop() 
+{
+  unsigned int range = 0; t=60383;
+  while(true){
+    range = getRange(t);
+    switch(range){
+        case 0:
+            t=t-5000;
+            break;
+        case 1:
+            t=t-50;
+            break;
+        case 2:
+            t=t-9;
+            break;
+        case 3:
+            t=t-1;
+            break;
+        case 4:
+            t=t+3                                                                                                 ;
+            break;
+    }
+//    Serial.print("T:"); Serial.println(t);
+//    Serial.print("Range; Value is:"); Serial.println(range);
+    doSteps(t);
+    
+  }
 
-    //First step
-    digitalWrite(VT6,LOW);
-    digitalWrite(VT1,HIGH);
-    digitalWrite(VT5,HIGH);
-    delay(t);
 
-    //Second step
-    digitalWrite(VT1,LOW);
-    digitalWrite(VT3,HIGH);
-    digitalWrite(VT5,HIGH);
-    delay(t);
+}
 
-    //Third step
-    digitalWrite(VT5,LOW);
-    digitalWrite(VT3,HIGH);
-    digitalWrite(VT4,HIGH);
-    delay(t);
+void doSteps(unsigned int t1){
+  for(int i = 0; i < 6; ++i) {
+    digitalWrite(ary[i][0],LOW);
+    digitalWrite(ary[i][1],HIGH);
+    digitalWrite(ary[i][2],HIGH);
 
-    //Fourth step
-    digitalWrite(VT3,LOW);
-    digitalWrite(VT2,HIGH);
-    digitalWrite(VT4,HIGH);
-    delay(t);
+    if(t1>16000){
+      delay(t1/1000);
+    } else {
+      delayMicroseconds(t1);
+    }
+  }
+}
 
-    //Fifth step
-    digitalWrite(VT4,LOW);
-    digitalWrite(VT2,HIGH);
-    digitalWrite(VT6,HIGH);
-    delay(t);
-
-    //Six step
-    digitalWrite(VT2,LOW);
-    digitalWrite(VT1,HIGH);
-    digitalWrite(VT6,HIGH);
-    delay(t);
-
+unsigned int getRange(int num){
+  for(unsigned int i = 0; i < 5; i++) {
+    if(num <= ranges[i][0] && !(num < ranges[i][1])){
+      return i;
+    }
+  }
 }
