@@ -20,7 +20,6 @@ void setup()
 void loop() 
 {
 
-
     digitalWrite(LED,HIGH);
     printstring(0,"Hello everyone!");
     printstring(1,"How do you do?");
