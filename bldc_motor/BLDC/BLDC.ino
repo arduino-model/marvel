@@ -1,6 +1,5 @@
 #include <Arduino.h>
-#include "../../../../../../../opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/USBAPI.h"
-#include "../../../../../../../opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/HardwareSerial.h"
+
 
 const int VT1=9;
 const int VT2=10;
@@ -21,7 +20,7 @@ const int ary[6][3] = {
 unsigned int t;
 int range = 0;
 const unsigned int ranges[5][2] = {
-  {999999,16384},
+  {65535,16384},
   {16383,5000},
   {4999,2200},
   {2199,1154},
@@ -66,7 +65,6 @@ int getRange(int num){
 void loop()
 {
     t=60000;
-    Serial.print("Range; Value is:"); Serial.println(range);
   while(true){
         range = getRange(t);
         switch(range){
@@ -85,10 +83,12 @@ void loop()
             case 4:
                 t=t+3                                                                                                 ;
                 break;
-            default:break;
+            default:
+                t=t-5000;
+                break;
         }
-        Serial.print("T:"); Serial.println(t);
-        Serial.print("Range; Value is:"); Serial.println(range);
+//        Serial.print("T:"); Serial.println(t);
+//        Serial.print("Range; Value is:"); Serial.println(range);
         doSteps(t);
   }
 
